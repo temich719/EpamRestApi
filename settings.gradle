@@ -1,0 +1,5 @@
+rootProject.name = 'RestApi'
+include 'Repository'
+include 'Service'
+include 'WevLayer'
+

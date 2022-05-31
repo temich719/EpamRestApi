@@ -1,0 +1,8 @@
+.idea
+.gradle
+log4j-spring.log
+build/
+bin/
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
