@@ -9,11 +9,9 @@ import com.epam.esm.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -40,11 +38,8 @@ public class TagServiceImpl implements TagService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public TagDTO getTagById(long id, Locale locale) throws NoSuchIdException {
-        try {
-            return mapper.mapToTagDTO(tagDAO.getTagById(id));
-        } catch (RepositoryException e) {
-            throw new NoSuchIdException("com.epam.esm.constraint.noSuchIdException", locale);
-        }
+        Tag tag = tagDAO.getTagById(id).orElseThrow(() -> new NoSuchIdException("com.epam.esm.constraint.noSuchIdException", locale));
+        return mapper.mapToTagDTO(tag);
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -63,9 +63,15 @@ public class GiftCertificateServiceImplTest {
 
     @Test
     public void testGetGiftCertificateByID() {
-        when(giftCertificateDAO.read(id)).thenReturn(giftCertificate);
-        GiftCertificate newCertificate = giftCertificateDAO.read(id);
+        Optional<GiftCertificate> optionalGiftCertificate = Optional.of(giftCertificate);
+        when(giftCertificateDAO.read(id)).thenReturn(optionalGiftCertificate);
+        Optional<GiftCertificate> newOptionalCertificate = giftCertificateDAO.read(id);
+        GiftCertificate newCertificate = null;
+        if (newOptionalCertificate.isPresent()){
+            newCertificate = newOptionalCertificate.get();
+        }
         verify(giftCertificateDAO, times(1)).read(id);
+        assert newCertificate != null;
         assertThat(newCertificate.getName()).isEqualTo(giftCertificate.getName());
         assertThat(newCertificate).isNotNull();
     }

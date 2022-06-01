@@ -52,8 +52,7 @@ public interface UserService {
      * @param size   is the size of page
      * @param locale is the locale that was inputted in http header
      * @return list of users with the highest orders cost with most widely used tag
-     * @throws NoSuchIdException is the exception that means that given id doesn't exist in database
      */
-    List<UserHighestOrdersCostDTO> getUserWithHighestOrdersCostWithMostWidelyUsedTag(int page, int size, Locale locale) throws NoSuchIdException;
+    List<UserHighestOrdersCostDTO> getUserWithHighestOrdersCostWithMostWidelyUsedTag(int page, int size, Locale locale);
 
 }

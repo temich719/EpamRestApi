@@ -36,7 +36,12 @@ public class GiftCertificateDAOImplTest {
     @Transactional(rollbackFor = Exception.class)
     @Test
     public void testRead() {
-        GiftCertificate giftCertificate = giftCertificateDAO.read(id);
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.read(id);
+        GiftCertificate giftCertificate = null;
+        if (optionalGiftCertificate.isPresent()){
+            giftCertificate = optionalGiftCertificate.get();
+        }
+        assert giftCertificate != null;
         assertThat(giftCertificate.getName()).isEqualTo("SportMaster");
     }
 

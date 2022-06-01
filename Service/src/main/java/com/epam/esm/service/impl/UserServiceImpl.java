@@ -8,7 +8,6 @@ import com.epam.esm.dtos.OrderDTO;
 import com.epam.esm.dtos.UserDTO;
 import com.epam.esm.dtos.UserHighestOrdersCostDTO;
 import com.epam.esm.exception.NoSuchIdException;
-import com.epam.esm.exception.RepositoryException;
 import com.epam.esm.service.UserService;
 import com.epam.esm.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public UserDTO getUserById(long id, Locale locale) throws NoSuchIdException {
-        try {
-            return mapper.mapToUserDTO(userDAO.getUserById(id));
-        } catch (RepositoryException e) {
-            throw new NoSuchIdException("com.epam.esm.constraint.noSuchIdException", locale);
-        }
+        User user = userDAO.getUserById(id).orElseThrow(() -> new NoSuchIdException("com.epam.esm.constraint.noSuchIdException", locale));
+        return mapper.mapToUserDTO(user);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -60,16 +56,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<UserHighestOrdersCostDTO> getUserWithHighestOrdersCostWithMostWidelyUsedTag(int page, int size, Locale locale) throws NoSuchIdException {
-        try {
-            List<UserHighestOrdersCostDTO> userHighestOrdersCostDTOs = new ArrayList<>();
-            for (User user : userDAO.getUsersWithHighestOrdersCostWithMostWidelyUsedTags(page, size)) {
-                userHighestOrdersCostDTOs.add(mapper.mapToUserHighestOrdersCostDTOFromUser(user));
-            }
-            return userHighestOrdersCostDTOs;
-        } catch (RepositoryException e) {
-            throw new NoSuchIdException("com.epam.esm.constraint.noSuchIdException", locale);
+    public List<UserHighestOrdersCostDTO> getUserWithHighestOrdersCostWithMostWidelyUsedTag(int page, int size, Locale locale) {
+        List<UserHighestOrdersCostDTO> userHighestOrdersCostDTOs = new ArrayList<>();
+        for (User user : userDAO.getUsersWithHighestOrdersCostWithMostWidelyUsedTags(page, size)) {
+            userHighestOrdersCostDTOs.add(mapper.mapToUserHighestOrdersCostDTOFromUser(user));
         }
+        return userHighestOrdersCostDTOs;
     }
 
     @Transactional(rollbackFor = Exception.class)

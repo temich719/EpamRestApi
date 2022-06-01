@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -47,10 +48,12 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testGetTagById() throws RepositoryException {
+    public void testGetTagById() {
+        Optional<Tag> optionalTag = Optional.of(tag);
         when(mapper.mapToTagDTO(tag)).thenReturn(tagDTO);
-        when(tagDAO.getTagById(id)).thenReturn(tag);
-        Tag newTag = tagDAO.getTagById(id);
+        when(tagDAO.getTagById(id)).thenReturn(optionalTag);
+        Tag newTag = tagDAO.getTagById(id).orElse(null);
+        assert newTag != null;
         TagDTO newTagDTO = mapper.mapToTagDTO(newTag);
         verify(tagDAO, times(1)).getTagById(id);
         verify(mapper, times(1)).mapToTagDTO(tag);

@@ -4,7 +4,6 @@ import com.epam.esm.dao.UserDAO;
 import com.epam.esm.domain.Order;
 import com.epam.esm.domain.User;
 import com.epam.esm.dtos.*;
-import com.epam.esm.exception.RepositoryException;
 import com.epam.esm.util.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -63,12 +63,14 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testGetUserById() throws RepositoryException {
+    public void testGetUserById() {
         when(mapper.mapToUserDTO(user)).thenReturn(userDTO);
         long id = 1;
-        when(userDAO.getUserById(id)).thenReturn(user);
+        Optional<User> optionalUser = Optional.of(user);
+        when(userDAO.getUserById(id)).thenReturn(optionalUser);
 
-        User newUser = userDAO.getUserById(id);
+        User newUser = userDAO.getUserById(id).orElse(null);
+        assert newUser != null;
         UserDTO newUserDTO = mapper.mapToUserDTO(newUser);
 
         verify(mapper, times(1)).mapToUserDTO(newUser);
@@ -101,7 +103,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testGetUserWithHighestOrdersCostWithMostWidelyUsedTag() throws RepositoryException {
+    public void testGetUserWithHighestOrdersCostWithMostWidelyUsedTag() {
         List<User> users = new ArrayList<>();
         users.add(user);
         when(userDAO.getUsersWithHighestOrdersCostWithMostWidelyUsedTags(1, 10)).thenReturn(users);

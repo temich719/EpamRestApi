@@ -4,7 +4,6 @@ import com.epam.esm.dao.AbstractDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dateiniso.DateGenerator;
 import com.epam.esm.domain.*;
-import com.epam.esm.exception.RepositoryException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -17,7 +16,7 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 import static com.epam.esm.stringsstorage.RepositoryStringsStorage.*;
 
@@ -54,13 +53,8 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     }
 
     @Override
-    public User getUserById(long id) throws RepositoryException {
-        Session session = sessionFactory.getCurrentSession();
-        User user = session.get(User.class, id);
-        if (Objects.isNull(user)){
-            throw new RepositoryException();
-        }
-        return user;
+    public Optional<User> getUserById(long id) {
+        return Optional.ofNullable(sessionFactory.getCurrentSession().get(User.class, id));
     }
 
     @Override
@@ -101,7 +95,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     }
 
     @Override
-    public List<User> getUsersWithHighestOrdersCostWithMostWidelyUsedTags(int page, int size) throws RepositoryException {
+    public List<User> getUsersWithHighestOrdersCostWithMostWidelyUsedTags(int page, int size) {
         List<User> users = getUsersWithHighestOrdersCost(page, size);
         for (User user:users) {
             List<Tag> tags = getMostWidelyUsedTag(user);
@@ -110,7 +104,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         return users;
     }
 
-    private List<User> getUsersWithHighestOrdersCost(int page, int size) throws RepositoryException {
+    private List<User> getUsersWithHighestOrdersCost(int page, int size) {
         Session session = sessionFactory.getCurrentSession();
         String limit = " limit " + size;
         String offset = " offset " + (page - 1) * size + ";";
@@ -119,9 +113,12 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 
         for (UserWithHighestOrdersCost userWithHighestOrdersCost:usersWithHighestOrdersCost) {
             long id = userWithHighestOrdersCost.getUser_id();
-            User user = getUserById(id);
-            user.setSum(userWithHighestOrdersCost.getSum());
-            users.add(user);
+            Optional<User> optionalUser = getUserById(id);
+            if (optionalUser.isPresent()){
+                User user = optionalUser.get();
+                user.setSum(userWithHighestOrdersCost.getSum());
+                users.add(user);
+            }
         }
         return users;
     }

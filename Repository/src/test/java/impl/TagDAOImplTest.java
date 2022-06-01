@@ -2,7 +2,6 @@ package impl;
 
 import com.epam.esm.config.DevRepositoryConfig;
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.RepositoryException;
 import org.junit.jupiter.api.Test;
@@ -14,11 +13,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -42,14 +38,17 @@ public class TagDAOImplTest {
         tag.setId(id);
         tag.setName("beauty");
         tagDAO.createTag(tag);
-        Tag newTag = tagDAO.getTagById(id);
+        Tag newTag = tagDAO.getTagById(id).orElse(null);
+
+        assert newTag != null;
         assertThat(tag.getName()).isEqualTo(newTag.getName());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Test
-    public void testGetTagById() throws RepositoryException {
-        Tag tag = tagDAO.getTagById(id);
+    public void testGetTagById() {
+        Tag tag = tagDAO.getTagById(id).orElse(null);
+        assert tag != null;
         assertThat(tag.getId()).isEqualTo(id);
         assertThat(tag.getName()).isEqualTo("sport");
     }

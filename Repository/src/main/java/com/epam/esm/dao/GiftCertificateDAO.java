@@ -7,6 +7,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface GiftCertificateDAO {
 
@@ -16,7 +17,7 @@ public interface GiftCertificateDAO {
      * @param id is the id of certificate that is wished to be gotten
      * @return gift certificate with required id
      */
-    GiftCertificate read(long id);
+    Optional<GiftCertificate> read(long id);
 
     /**
      * gets all certificates
@@ -78,5 +79,12 @@ public interface GiftCertificateDAO {
      * @return list of filtered certificates
      */
     List<GiftCertificate> getFilteredCertificateList(MultiValueMap<String, Object> params);
+
+    /**
+     * detaches object from session
+     *
+     * @param giftCertificate is the gift certificate that needs to be detached
+     */
+    void detachCertificate(GiftCertificate giftCertificate);
 
 }

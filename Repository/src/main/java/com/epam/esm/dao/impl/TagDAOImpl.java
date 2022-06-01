@@ -33,19 +33,15 @@ public class TagDAOImpl extends AbstractDAO implements TagDAO {
     public void createTag(Tag tag) throws RepositoryException {
         try {
             getTagByName(tag.getName());
-            throw new RepositoryException();
+            throw new RepositoryException("Such tag is already exists");
         } catch (NoResultException e) {
             sessionFactory.getCurrentSession().save(tag);
-        }
+       }
     }
 
     @Override
-    public Tag getTagById(long id) throws RepositoryException {
-        Tag tag = sessionFactory.getCurrentSession().get(Tag.class, id);
-        if (Objects.isNull(tag)) {
-            throw new RepositoryException();
-        }
-        return tag;
+    public Optional<Tag> getTagById(long id) {
+        return Optional.ofNullable(sessionFactory.getCurrentSession().get(Tag.class, id));
     }
 
     @Override
@@ -64,16 +60,18 @@ public class TagDAOImpl extends AbstractDAO implements TagDAO {
     @Override
     public void deleteTag(long id) throws RepositoryException {
         Session session = sessionFactory.getCurrentSession();
-        Tag tag = getTagById(id);
-        if (Objects.isNull(tag)) {
-            throw new RepositoryException();
-        }
-        System.out.println(DELETE_TAG_FROM_MANY_TO_MANY_TABLE.replace("?", String.valueOf(tag.getId())));
+        Tag tag = getTagById(id).orElseThrow(() -> new RepositoryException("There is no such id"));
         session.createNativeQuery(DELETE_TAG_FROM_MANY_TO_MANY_TABLE.replace("?", String.valueOf(tag.getId()))).executeUpdate();
         session.delete(tag);
     }
 
-    private Tag getTagByName(String tagName) {
+    @Override
+    public void updateTag(Tag tag) {
+        sessionFactory.getCurrentSession().update(tag);
+    }
+
+    @Override
+    public Optional<Tag> getTagByName(String tagName) {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
@@ -82,7 +80,17 @@ public class TagDAOImpl extends AbstractDAO implements TagDAO {
         criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(NAME), parameterExpression));
         Query<Tag> query = session.createQuery(criteriaQuery);
         query.setParameter(parameterExpression, tagName);
-        return query.getSingleResult();
+        return Optional.ofNullable(query.getSingleResult());
+    }
+
+    @Override
+    public Long getTagCountByName(Tag tag) {
+        CriteriaBuilder criteriaBuilder = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Tag> root = criteriaQuery.from(Tag.class);
+        criteriaQuery.select(criteriaBuilder.count(root));
+        criteriaQuery.where(criteriaBuilder.equal(root.get(NAME), tag.getName()));
+        return sessionFactory.createEntityManager().createQuery(criteriaQuery).getSingleResult();
     }
 
 }

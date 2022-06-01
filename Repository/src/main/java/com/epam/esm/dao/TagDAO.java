@@ -4,6 +4,7 @@ import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.RepositoryException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TagDAO {
 
@@ -20,9 +21,8 @@ public interface TagDAO {
      *
      * @param id is the Tag object id
      * @return Tag object that has id the same as given one's
-     * @throws RepositoryException is the module exception
      */
-    Tag getTagById(long id) throws RepositoryException;
+    Optional<Tag> getTagById(long id);
 
     /**
      * finds all Tag objects
@@ -40,5 +40,28 @@ public interface TagDAO {
      * @throws RepositoryException is the module exception
      */
     void deleteTag(long id) throws RepositoryException;
+
+    /**
+     * updates tag
+     *
+     * @param tag is the new tag
+     */
+    void updateTag(Tag tag);
+
+    /**
+     * gets tag by name
+     *
+     * @param tagName is the tag name
+     * @return tag with given name
+     */
+    Optional<Tag> getTagByName(String tagName);
+
+    /**
+     * gets count of tags that have name the same as given
+     *
+     * @param tag is the tag with given name
+     * @return count of tags
+     */
+    Long getTagCountByName(Tag tag);
 
 }

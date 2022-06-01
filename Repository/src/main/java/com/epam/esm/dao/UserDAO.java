@@ -2,9 +2,8 @@ package com.epam.esm.dao;
 
 import com.epam.esm.domain.Order;
 import com.epam.esm.domain.User;
-import com.epam.esm.exception.RepositoryException;
-
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDAO {
 
@@ -13,9 +12,8 @@ public interface UserDAO {
      *
      * @param id is the id
      * @return user that has id that equals id param
-     * @throws RepositoryException is the module exception
      */
-    User getUserById(long id) throws RepositoryException;
+    Optional<User> getUserById(long id);
 
     /**
      * get list of users
@@ -48,7 +46,6 @@ public interface UserDAO {
      * @param page is the page
      * @param size is the size of page
      * @return list of users
-     * @throws RepositoryException is the module exception
      */
-    List<User> getUsersWithHighestOrdersCostWithMostWidelyUsedTags(int page, int size) throws RepositoryException;
+    List<User> getUsersWithHighestOrdersCostWithMostWidelyUsedTags(int page, int size);
 }
