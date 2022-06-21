@@ -1,13 +1,13 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dtos.AnswerOrderDTO;
-import com.epam.esm.dtos.OrderDTO;
-import com.epam.esm.dtos.UserDTO;
-import com.epam.esm.dtos.UserHighestOrdersCostDTO;
+import com.epam.esm.dtos.*;
 import com.epam.esm.exception.NoSuchIdException;
+import com.epam.esm.exception.ServiceException;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -38,12 +38,23 @@ public interface UserService {
     UserDTO getUserById(long id, Locale locale) throws NoSuchIdException;
 
     /**
+     * gets user by id
+     *
+     * @param id     is the id of user
+     * @param locale is the locale that was inputted in http header
+     * @return user who has id the same as given
+     * @throws NoSuchIdException is the exception that means that given id doesn't exist in database
+     */
+    UserDTO getUserById(BigInteger id, Locale locale) throws NoSuchIdException;
+
+    /**
      * gets orders of definite user
      *
      * @param userName the name of user
      * @return user with orders and their cost in total
+     * @throws ServiceException is the module exception
      */
-    List<AnswerOrderDTO> getUsersOrders(String userName);
+    List<AnswerOrderDTO> getUsersOrders(String userName) throws ServiceException;
 
     /**
      * gets users with the highest orders cost with most widely used tag
@@ -54,5 +65,31 @@ public interface UserService {
      * @return list of users with the highest orders cost with most widely used tag
      */
     List<UserHighestOrdersCostDTO> getUserWithHighestOrdersCostWithMostWidelyUsedTag(int page, int size, Locale locale);
+
+    /**
+     * creates new user
+     *
+     * @param securityUserDTO is the user data
+     * @throws ServiceException is the module exception
+     */
+    void saveUser(SecurityUserDTO securityUserDTO) throws ServiceException;
+
+    /**
+     * gets user by name
+     *
+     * @param userName is the name of user
+     * @return user with given name
+     * @throws ServiceException is the module exception
+     */
+    UserDTO getUserByName(String userName) throws ServiceException;
+
+    /**
+     * gets user with its role
+     *
+     * @param userName is the name of user
+     * @return user
+     * @throws ServiceException is the module exception
+     */
+    RoleUser getUserWithRole(String userName) throws ServiceException;
 
 }

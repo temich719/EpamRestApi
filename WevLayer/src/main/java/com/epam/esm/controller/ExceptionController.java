@@ -22,6 +22,8 @@ public class ExceptionController extends AbstractController {
     private static final String NOT_INSERTED_CODE = "23";
     private static final String INVALID_INPUT_DATE_CODE = "25";
     private static final String SERVICE_EXCEPTION_CODE = "26";
+    private static final String INVALID_PASSWORD_EXCEPTION_CODE = "27";
+    private static final String JWT_EXCEPTION_CODE = "28";
 
     private static final HttpStatus httpStatusNotFound = HttpStatus.NOT_FOUND;
     private static final HttpStatus httpStatusInternalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -38,6 +40,26 @@ public class ExceptionController extends AbstractController {
         answerMessageJson.setMessage(e.getMessage());
         answerMessageJson.setStatus(httpStatusInternalServerError.toString());
         answerMessageJson.setCode(httpStatusInternalServerError.value() + SERVICE_EXCEPTION_CODE);
+        return answerMessageJson;
+    }
+
+    @ExceptionHandler(value = InvalidPasswordException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public AnswerMessageJson handleInvalidPasswordException(InvalidPasswordException e){
+        LOGGER.error("Handle InvalidPasswordException");
+        answerMessageJson.setMessage(e.getMessage());
+        answerMessageJson.setCode(httpStatusInternalServerError.value() + INVALID_PASSWORD_EXCEPTION_CODE);
+        answerMessageJson.setStatus(httpStatusInternalServerError.toString());
+        return answerMessageJson;
+    }
+
+    @ExceptionHandler(value = JwtAuthenticationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public AnswerMessageJson handleJwtAuthenticationException(JwtAuthenticationException e){
+        LOGGER.error("Handle JwtAuthenticationException");
+        answerMessageJson.setMessage(e.getMessage());
+        answerMessageJson.setCode(httpStatusInternalServerError.value() + JWT_EXCEPTION_CODE);
+        answerMessageJson.setStatus(httpStatusInternalServerError.toString());
         return answerMessageJson;
     }
 

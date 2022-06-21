@@ -23,6 +23,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String userName;
+    private String password;
+    private String role;
 
     @OneToMany
     @JoinTable(name = "users_orders", joinColumns = {@JoinColumn(name = "user_id")},

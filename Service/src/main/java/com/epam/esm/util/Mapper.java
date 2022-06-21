@@ -13,6 +13,23 @@ import java.util.stream.Collectors;
 @Component
 public class Mapper {
 
+    public RoleUser mapToRoleUser(User user){
+        RoleUser roleUser = new RoleUser();
+        roleUser.setRole(user.getRole());
+        roleUser.setUserName(user.getUserName());
+        roleUser.setPassword(user.getPassword());
+        List<AnswerOrderDTO> answerOrderDTOs = user.getOrders().stream().map(this::mapToAnswerOrderDTO).collect(Collectors.toList());
+        roleUser.setOrderDTOs(answerOrderDTOs);
+        return roleUser;
+    }
+
+    public User mapToUser(SecurityUserDTO securityUserDTO){
+        User user = new User();
+        user.setUserName(securityUserDTO.getUserName());
+        user.setPassword(securityUserDTO.getPassword());
+        return user;
+    }
+
     public List<UserDTO> mapToUserDTOList(List<User> users) {
         return users.stream().map(this::mapToUserDTO).collect(Collectors.toList());
     }
@@ -55,6 +72,7 @@ public class Mapper {
             answerOrderDTOs.add(mapToAnswerOrderDTO(order));
         }
         userDTO.setOrderDTOs(answerOrderDTOs);
+        userDTO.setPassword(user.getPassword());
         return userDTO;
     }
 

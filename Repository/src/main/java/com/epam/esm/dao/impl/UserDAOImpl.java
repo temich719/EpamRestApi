@@ -4,16 +4,19 @@ import com.epam.esm.dao.AbstractDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dateiniso.DateGenerator;
 import com.epam.esm.domain.*;
+import com.epam.esm.exception.RepositoryException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,12 +51,18 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     }
 
     @Override
-    public List<Order> getUsersOrders(String userName) {
-        return getUserByName(userName).getOrders();
+    public List<Order> getUsersOrders(String userName) throws RepositoryException {
+        User user = getUserByName(userName).orElseThrow(() -> new RepositoryException("Such user doesn't exist"));
+        return user.getOrders();
     }
 
     @Override
     public Optional<User> getUserById(long id) {
+        return Optional.ofNullable(sessionFactory.getCurrentSession().get(User.class, id));
+    }
+
+    @Override
+    public Optional<User> getUserById(BigInteger id) {
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(User.class, id));
     }
 
@@ -70,6 +79,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         return query.getResultList();
     }
 
+    //TODO make states active and non-active for certificates(ability to make order only with active orders), when delete certificate we dont delete but make it non-active
     @Override
     public void makeOrder(Order order, Long[] certificateIds) {
         Session session = sessionFactory.getCurrentSession();
@@ -80,28 +90,52 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 
         User user = order.getUser();
         List<Order> orders = new ArrayList<>();
-        if (getUsersCountByName(user.getUserName()).equals(0L)){
+        if (getUsersCountByName(user.getUserName()).equals(0L)) {
             session.save(order);
             orders.add(order);
             user.setOrders(orders);
             session.save(user);
         } else {
-            User existingUser = getUserByName(user.getUserName());
-            order.setUser(existingUser);
-            session.save(order);
-            existingUser.getOrders().add(order);
-            session.update(existingUser);
+            Optional<User> optionalUser = getUserByName(user.getUserName());
+            if (optionalUser.isPresent()) {
+                User existingUser = optionalUser.get();
+                order.setUser(existingUser);
+                session.save(order);
+                existingUser.getOrders().add(order);
+                session.update(existingUser);
+            }
         }
     }
 
     @Override
     public List<User> getUsersWithHighestOrdersCostWithMostWidelyUsedTags(int page, int size) {
         List<User> users = getUsersWithHighestOrdersCost(page, size);
-        for (User user:users) {
+        for (User user : users) {
             List<Tag> tags = getMostWidelyUsedTag(user);
             user.setTags(tags);
         }
         return users;
+    }
+
+    @Override
+    public void saveUser(User user) throws RepositoryException {
+        try {
+            getUserByName(user.getUserName());
+            throw new RepositoryException("Such user is already exist!");
+        } catch (NoResultException e) {
+            sessionFactory.getCurrentSession().save(user);
+        }
+    }
+
+    @Override
+    public Optional<User> getUserByName(String userName) {
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
+        criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(USER_NAME), userName));
+        Query<User> query = session.createQuery(criteriaQuery);
+        return Optional.ofNullable(query.getSingleResult());
     }
 
     private List<User> getUsersWithHighestOrdersCost(int page, int size) {
@@ -111,10 +145,10 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         List<UserWithHighestOrdersCost> usersWithHighestOrdersCost = session.createNativeQuery(SELECT_USERS_WITH_HIGHEST_ORDER_COST + limit + offset, UserWithHighestOrdersCost.class).getResultList();
         List<User> users = new ArrayList<>();
 
-        for (UserWithHighestOrdersCost userWithHighestOrdersCost:usersWithHighestOrdersCost) {
+        for (UserWithHighestOrdersCost userWithHighestOrdersCost : usersWithHighestOrdersCost) {
             long id = userWithHighestOrdersCost.getUser_id();
             Optional<User> optionalUser = getUserById(id);
-            if (optionalUser.isPresent()){
+            if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
                 user.setSum(userWithHighestOrdersCost.getSum());
                 users.add(user);
@@ -127,7 +161,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         return sessionFactory.getCurrentSession().createNativeQuery(SELECT_MOST_WIDELY_USED_TAGS.replace("?", String.valueOf(user.getId())), Tag.class).getResultList();
     }
 
-    private List<GiftCertificate> getCertificatesByIds(Long[] certificateIds){
+    private List<GiftCertificate> getCertificatesByIds(Long[] certificateIds) {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
@@ -135,7 +169,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         List<GiftCertificate> giftCertificates = new ArrayList<>();
         ParameterExpression<Long> parameterExpression = criteriaBuilder.parameter(Long.class);
 
-        for (Long id: certificateIds) {
+        for (Long id : certificateIds) {
             criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(ID), parameterExpression));
             Query<GiftCertificate> query = session.createQuery(criteriaQuery);
             query.setParameter(parameterExpression, id);
@@ -144,7 +178,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         return giftCertificates;
     }
 
-    private Long getUsersCountByName(String userName){
+    private Long getUsersCountByName(String userName) {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
@@ -152,16 +186,6 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get(USER_NAME), userName));
         Query<Long> query = session.createQuery(criteriaQuery);
-        return query.getSingleResult();
-    }
-
-    private User getUserByName(String userName){
-        Session session = sessionFactory.getCurrentSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(USER_NAME), userName));
-        Query<User> query = session.createQuery(criteriaQuery);
         return query.getSingleResult();
     }
 

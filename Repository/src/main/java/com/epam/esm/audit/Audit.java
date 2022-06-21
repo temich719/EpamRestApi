@@ -26,7 +26,6 @@ public class Audit {
     @Column
     private String modifiedEntityBy;
 
-
     @PrePersist
     public void onPrePersist() {
         if (this.getCreationEntityDate() == null) {

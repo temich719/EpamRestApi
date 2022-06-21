@@ -1,11 +1,9 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dtos.AnswerOrderDTO;
-import com.epam.esm.dtos.OrderDTO;
-import com.epam.esm.dtos.UserDTO;
-import com.epam.esm.dtos.UserHighestOrdersCostDTO;
+import com.epam.esm.dtos.*;
 import com.epam.esm.errors.AnswerMessageJson;
 import com.epam.esm.exception.NoSuchIdException;
+import com.epam.esm.exception.ServiceException;
 import com.epam.esm.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,6 +24,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/users")
 public class UserController extends AbstractController {
+
+    private static final String PURCHASED_CODE = "31";
 
     private final static Logger LOGGER = Logger.getLogger(UserController.class);
     private static final Link selfLink = linkTo(UserController.class).withSelfRel();
@@ -39,13 +40,17 @@ public class UserController extends AbstractController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public AnswerMessageJson makeOrder(@RequestBody OrderDTO orderDTO) {
+    public AnswerMessageJson makeOrder(@RequestBody SecurityOrderDTO securityOrderDTO) {
         LOGGER.info("Making order");
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setGiftCertificateIds(securityOrderDTO.getGiftCertificateIds());
+        orderDTO.setUserNameDTO(new UserNameDTO(userName));
         userService.makeOrder(orderDTO);
         HttpStatus httpStatus = HttpStatus.CREATED;
         answerMessageJson.setMessage("Order has been purchased!");
         answerMessageJson.setStatus(httpStatus.toString());
-        answerMessageJson.setCode(httpStatus.value() + "31");
+        answerMessageJson.setCode(httpStatus.value() + PURCHASED_CODE);
         LOGGER.info("Order has been purchased");
         answerMessageJson.add(selfLink);
         return answerMessageJson;
@@ -53,7 +58,7 @@ public class UserController extends AbstractController {
 
     @GetMapping(value = "/orders/{userName}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<AnswerOrderDTO> getUsersOrders(@PathVariable String userName) {
+    public CollectionModel<AnswerOrderDTO> getUsersOrders(@PathVariable String userName) throws ServiceException {
         LOGGER.info("Get user's orders");
         return CollectionModel.of(userService.getUsersOrders(userName), selfLink);
     }
@@ -71,7 +76,7 @@ public class UserController extends AbstractController {
     @GetMapping(value = "/maxCostWithMostWidelyTags", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<UserHighestOrdersCostDTO> getHighestOrdersCostUsersWithMostWidelyUsedTags(@RequestParam(defaultValue = "1") int page,
-                                                                                                     @RequestParam(defaultValue = "10") int size, Locale locale) throws NoSuchIdException {
+                                                                                                     @RequestParam(defaultValue = "10") int size, Locale locale) {
         LOGGER.info("Getting the highest orders cost of user with the most widely used tags");
         Link link = linkTo(methodOn(UserController.class).getHighestOrdersCostUsersWithMostWidelyUsedTags(page, size, locale)).withRel("getHighestOrdersCostUsersWithMostWidelyUsedTags");
         return CollectionModel.of(userService.getUserWithHighestOrdersCostWithMostWidelyUsedTag(page, size, locale), selfLink, link);
