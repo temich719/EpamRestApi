@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dtos.SecurityUserDTO;
-import com.epam.esm.dtos.UserDTO;
+import com.epam.esm.dto.SecurityUserDTO;
+import com.epam.esm.dto.UserDTO;
 import com.epam.esm.errors.AnswerMessageJson;
 import com.epam.esm.exception.InvalidPasswordException;
 import com.epam.esm.exception.ServiceException;

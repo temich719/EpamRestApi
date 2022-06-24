@@ -4,7 +4,7 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Order;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.User;
-import com.epam.esm.dtos.*;
+import com.epam.esm.dto.*;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

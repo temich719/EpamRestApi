@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dtos.RoleUser;
+import com.epam.esm.dto.RoleUser;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

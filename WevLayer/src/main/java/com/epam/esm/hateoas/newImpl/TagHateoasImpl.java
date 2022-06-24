@@ -1,7 +1,7 @@
 package com.epam.esm.hateoas.newImpl;
 
 import com.epam.esm.controller.TagController;
-import com.epam.esm.dtos.TagDTO;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.exception.InvalidInputDataException;
 import com.epam.esm.exception.NoSuchIdException;
 import com.epam.esm.exception.NotInsertedException;

@@ -3,7 +3,8 @@ package service;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.domain.Order;
 import com.epam.esm.domain.User;
-import com.epam.esm.dtos.*;
+import com.epam.esm.dto.*;
+import com.epam.esm.exception.RepositoryException;
 import com.epam.esm.util.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,7 +82,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testGetUsersOrders() {
+    public void testGetUsersOrders() throws RepositoryException {
         String name = "Sasha";
         List<Order> orders = new ArrayList<>();
         orders.add(order);

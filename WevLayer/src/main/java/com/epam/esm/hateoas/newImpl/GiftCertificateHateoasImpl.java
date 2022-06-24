@@ -1,7 +1,7 @@
 package com.epam.esm.hateoas.newImpl;
 
 import com.epam.esm.controller.GiftController;
-import com.epam.esm.dtos.GiftCertificateDTO;
+import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.exception.InvalidInputDataException;
 import com.epam.esm.exception.NoSuchIdException;
 import com.epam.esm.exception.NotInsertedException;

@@ -1,4 +1,4 @@
-package com.epam.esm.dtos;
+package com.epam.esm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class UserHighestOrdersCostDTO extends RepresentationModel<UserHighestOrdersCostDTO> {
 
-    long id;
-    String userName;
-    List<TagDTO> tagDTOs;
-    int sum;
+    private long id;
+    private String userName;
+    private List<TagDTO> tagDTOs;
+    private int sum;
 
 }

@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dtos.DateAndTimeOrderDTO;
+import com.epam.esm.dto.DateAndTimeOrderDTO;
 import com.epam.esm.service.OrderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

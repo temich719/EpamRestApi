@@ -2,7 +2,7 @@ package service;
 
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.domain.Order;
-import com.epam.esm.dtos.DateAndTimeOrderDTO;
+import com.epam.esm.dto.DateAndTimeOrderDTO;
 import com.epam.esm.util.Mapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

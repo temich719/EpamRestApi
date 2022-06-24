@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dtos.*;
+import com.epam.esm.dto.*;
 import com.epam.esm.errors.AnswerMessageJson;
 import com.epam.esm.exception.NoSuchIdException;
 import com.epam.esm.exception.ServiceException;

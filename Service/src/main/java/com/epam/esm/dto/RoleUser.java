@@ -1,4 +1,4 @@
-package com.epam.esm.dtos;
+package com.epam.esm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class RoleUser {
 
-    String userName;
-    List<AnswerOrderDTO> orderDTOs;
-    String password;
-    String role;
+    private String userName;
+    private List<AnswerOrderDTO> orderDTOs;
+    private String password;
+    private String role;
 
 }

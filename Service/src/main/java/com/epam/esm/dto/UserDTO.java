@@ -1,4 +1,4 @@
-package com.epam.esm.dtos;
+package com.epam.esm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,11 +12,10 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnswerOrderDTO extends RepresentationModel<AnswerOrderDTO> {
+public class UserDTO extends RepresentationModel<UserDTO> {
 
-    long id;
-    String date;
-    String cost;
-    List<GiftCertificateDTO> giftCertificateDTOs;
+    private String userName;
+    private List<AnswerOrderDTO> orderDTOs;
+    private String password;
 
 }

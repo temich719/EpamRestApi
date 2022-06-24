@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.domain.Tag;
-import com.epam.esm.dtos.TagDTO;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.exception.*;
 import com.epam.esm.service.TagService;
 import com.epam.esm.util.Mapper;

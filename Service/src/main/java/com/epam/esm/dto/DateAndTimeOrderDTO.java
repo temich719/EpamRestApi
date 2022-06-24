@@ -1,4 +1,4 @@
-package com.epam.esm.dtos;
+package com.epam.esm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,6 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DateAndTimeOrderDTO extends RepresentationModel<DateAndTimeOrderDTO> {
-    String date;
-    String cost;
+    private String date;
+    private String cost;
 }

@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dtos.DateAndTimeOrderDTO;
+import com.epam.esm.dto.DateAndTimeOrderDTO;
 
 public interface OrderService {
 

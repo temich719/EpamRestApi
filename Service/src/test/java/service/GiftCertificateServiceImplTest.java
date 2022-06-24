@@ -3,7 +3,7 @@ package service;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
-import com.epam.esm.dtos.GiftCertificateDTO;
+import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.exception.RepositoryException;
 import com.epam.esm.util.Mapper;
 import org.junit.jupiter.api.Assertions;

@@ -1,13 +1,12 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dtos.*;
+import com.epam.esm.dto.*;
 import com.epam.esm.exception.NoSuchIdException;
 import com.epam.esm.exception.ServiceException;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 public interface UserService {
 

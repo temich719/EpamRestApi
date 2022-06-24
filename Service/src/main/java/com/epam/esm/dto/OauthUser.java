@@ -1,4 +1,4 @@
-package com.epam.esm.dtos;
+package com.epam.esm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OauthUser {
 
-    BigInteger id;
-    String name;
-    String email;
-    String gender;
-    String locale;
-    LocalDateTime lastVisit;
+    private BigInteger id;
+    private String name;
+    private String email;
+    private String gender;
+    private String locale;
+    private LocalDateTime lastVisit;
 
 }

@@ -1,7 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.OrderDAO;
-import com.epam.esm.dtos.DateAndTimeOrderDTO;
+import com.epam.esm.dto.DateAndTimeOrderDTO;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;

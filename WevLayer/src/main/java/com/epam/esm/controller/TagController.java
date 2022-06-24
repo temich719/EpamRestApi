@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dtos.TagDTO;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.errors.AnswerMessageJson;
 import com.epam.esm.exception.*;
 import com.epam.esm.hateoas.Hateoas;
