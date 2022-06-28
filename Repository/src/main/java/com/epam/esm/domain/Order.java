@@ -1,10 +1,7 @@
 package com.epam.esm.domain;
 
 import com.epam.esm.audit.Audit;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -47,7 +44,9 @@ public class Order {
         if (!Objects.equals(date, order.date)) return false;
         if (!Objects.equals(cost, order.cost)) return false;
         if (!Objects.equals(user, order.user)) return false;
-        return Objects.equals(giftCertificates, order.giftCertificates);
+        if (!Objects.equals(giftCertificates, order.giftCertificates))
+            return false;
+        return Objects.equals(audit, order.audit);
     }
 
     @Override
@@ -57,6 +56,19 @@ public class Order {
         result = 31 * result + (cost != null ? cost.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (giftCertificates != null ? giftCertificates.hashCode() : 0);
+        result = 31 * result + (audit != null ? audit.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", date='" + date + '\'' +
+                ", cost='" + cost + '\'' +
+                ", user=" + user +
+                ", giftCertificates=" + giftCertificates +
+                ", audit=" + audit +
+                '}';
     }
 }

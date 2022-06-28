@@ -30,7 +30,7 @@ public class Tag {
     }
 
     @ManyToMany(mappedBy = "tags")
-    Set<GiftCertificate> giftCertificates;
+    private Set<GiftCertificate> giftCertificates;
 
     @Override
     public boolean equals(Object o) {
@@ -40,13 +40,17 @@ public class Tag {
         Tag tag = (Tag) o;
 
         if (id != tag.id) return false;
-        return Objects.equals(name, tag.name);
+        if (!Objects.equals(name, tag.name)) return false;
+        if (!Objects.equals(audit, tag.audit)) return false;
+        return Objects.equals(giftCertificates, tag.giftCertificates);
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (audit != null ? audit.hashCode() : 0);
+        result = 31 * result + (giftCertificates != null ? giftCertificates.hashCode() : 0);
         return result;
     }
 
@@ -55,6 +59,8 @@ public class Tag {
         return "Tag{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", audit=" + audit +
+                ", giftCertificates=" + giftCertificates +
                 '}';
     }
 }

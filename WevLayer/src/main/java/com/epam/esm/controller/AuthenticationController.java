@@ -39,7 +39,6 @@ public class AuthenticationController extends AbstractController{
         LOGGER.info("Registration...");
         String password = securityUserDTO.getPassword();
         securityUserDTO.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        System.out.println(securityUserDTO);
         userService.saveUser(securityUserDTO);
         answerMessageJson.setMessage("New user has been created!");
         answerMessageJson.setStatus(HttpStatus.ACCEPTED.toString());

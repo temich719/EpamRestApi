@@ -1,9 +1,7 @@
 package com.epam.esm.domain;
 
 import com.epam.esm.audit.Audit;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -13,6 +11,7 @@ import java.util.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class GiftCertificate {
 
     @Id
@@ -22,6 +21,7 @@ public class GiftCertificate {
     private String description;
     private String price;
     private String duration;
+    private boolean status;
     @Column(name = "create_date")
     private String createDate;
     @Column(name = "last_update_date")
@@ -34,17 +34,6 @@ public class GiftCertificate {
 
     @Embedded
     private Audit audit = new Audit();
-
-    public GiftCertificate(long id, String name, String description, String price, String duration, String createDate, String lastUpdateDate, Tag... tags) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        Collections.addAll(this.tags, tags);
-    }
 
     public GiftCertificate(long id, String name, String description, String price, String duration) {
         this.id = id;
@@ -62,6 +51,7 @@ public class GiftCertificate {
         GiftCertificate that = (GiftCertificate) o;
 
         if (id != that.id) return false;
+        if (status != that.status) return false;
         if (!Objects.equals(name, that.name)) return false;
         if (!Objects.equals(description, that.description)) return false;
         if (!Objects.equals(price, that.price)) return false;
@@ -69,7 +59,8 @@ public class GiftCertificate {
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(lastUpdateDate, that.lastUpdateDate))
             return false;
-        return Objects.equals(tags, that.tags);
+        if (!Objects.equals(tags, that.tags)) return false;
+        return Objects.equals(audit, that.audit);
     }
 
     @Override
@@ -79,9 +70,11 @@ public class GiftCertificate {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        result = 31 * result + (status ? 1 : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + (audit != null ? audit.hashCode() : 0);
         return result;
     }
 

@@ -23,6 +23,8 @@ import static com.epam.esm.stringsstorage.RepositoryStringsStorage.*;
 @Repository
 public class GiftCertificateDAOImpl extends AbstractDAO implements GiftCertificateDAO {
 
+    private final static String MAKE_CERTIFICATE_NON_ACTIVE = "update gift_certificate set status = false where id = ?;";
+
     private final DateGenerator dateGenerator;
     private final SQLBuilder sqlBuilder;
     private final TagDAO tagDAO;
@@ -95,11 +97,10 @@ public class GiftCertificateDAOImpl extends AbstractDAO implements GiftCertifica
 
     @Override
     public void delete(long id) throws RepositoryException {
-        Session session = sessionFactory.getCurrentSession();
         Optional<GiftCertificate> optionalGiftCertificate = read(id);
-        if (optionalGiftCertificate.isPresent()){
+        if (optionalGiftCertificate.isPresent()) {
             GiftCertificate giftCertificate = optionalGiftCertificate.get();
-            session.delete(giftCertificate);
+            makeCertificateNonActive(giftCertificate);
         } else {
             throw new RepositoryException("There is no such id");
         }
@@ -143,6 +144,11 @@ public class GiftCertificateDAOImpl extends AbstractDAO implements GiftCertifica
             giftCertificatesIds.add(giftCertificate.getId());
         }
         return giftCertificatesIds;
+    }
+
+    private void makeCertificateNonActive(GiftCertificate giftCertificate){
+        Session session = sessionFactory.getCurrentSession();
+        session.createNativeQuery(MAKE_CERTIFICATE_NON_ACTIVE.replaceAll("\\?", String.valueOf(giftCertificate.getId()))).executeUpdate();
     }
 
 }

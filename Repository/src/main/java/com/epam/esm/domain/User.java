@@ -52,13 +52,25 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        return Objects.equals(userName, user.userName);
+        if (sum != user.sum) return false;
+        if (!Objects.equals(userName, user.userName)) return false;
+        if (!Objects.equals(password, user.password)) return false;
+        if (!Objects.equals(role, user.role)) return false;
+        if (!Objects.equals(orders, user.orders)) return false;
+        if (!Objects.equals(tags, user.tags)) return false;
+        return Objects.equals(audit, user.audit);
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (orders != null ? orders.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + sum;
+        result = 31 * result + (audit != null ? audit.hashCode() : 0);
         return result;
     }
 
@@ -67,9 +79,12 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
                 ", orders=" + orders +
                 ", tags=" + tags +
                 ", sum=" + sum +
+                ", audit=" + audit +
                 '}';
     }
 }

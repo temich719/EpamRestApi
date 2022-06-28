@@ -4,6 +4,7 @@ import com.epam.esm.dao.AbstractDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dateiniso.DateGenerator;
 import com.epam.esm.domain.*;
+import com.epam.esm.domain.Order;
 import com.epam.esm.exception.RepositoryException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +77,6 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         return query.getResultList();
     }
 
-    //TODO make states active and non-active for certificates(ability to make order only with active orders), when delete certificate we dont delete but make it non-active
     @Override
     public void makeOrder(Order order, Long[] certificateIds) {
         Session session = sessionFactory.getCurrentSession();
@@ -167,12 +164,12 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
         List<GiftCertificate> giftCertificates = new ArrayList<>();
-        ParameterExpression<Long> parameterExpression = criteriaBuilder.parameter(Long.class);
 
         for (Long id : certificateIds) {
-            criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(ID), parameterExpression));
+            Predicate idPredicate = criteriaBuilder.equal(root.get(ID), id);
+            Predicate statusPredicate = criteriaBuilder.equal(root.get(STATUS), true);
+            criteriaQuery.select(root).where(criteriaBuilder.and(idPredicate, statusPredicate));
             Query<GiftCertificate> query = session.createQuery(criteriaQuery);
-            query.setParameter(parameterExpression, id);
             giftCertificates.add(query.getSingleResult());
         }
         return giftCertificates;
