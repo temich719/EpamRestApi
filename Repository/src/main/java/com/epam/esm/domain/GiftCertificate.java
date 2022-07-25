@@ -73,7 +73,6 @@ public class GiftCertificate {
         result = 31 * result + (status ? 1 : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
-        result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (audit != null ? audit.hashCode() : 0);
         return result;
     }
@@ -86,9 +85,11 @@ public class GiftCertificate {
                 ", description='" + description + '\'' +
                 ", price='" + price + '\'' +
                 ", duration='" + duration + '\'' +
+                ", status=" + status +
                 ", createDate='" + createDate + '\'' +
                 ", lastUpdateDate='" + lastUpdateDate + '\'' +
                 ", tags=" + tags +
+                ", audit=" + audit +
                 '}';
     }
 }

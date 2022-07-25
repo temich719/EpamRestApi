@@ -28,7 +28,7 @@ public class SQLBuilder {
     private static final String SEMICOLON = ";";
 
     private static final String SELECT_CERTIFICATE_BY_TAGS = "select gift_certificate.id, " +
-            "gift_certificate.name, description, price, duration, create_date, last_update_date, " +
+            "gift_certificate.name, description, price, duration, status, create_date, last_update_date, " +
             "gift_certificate.creationEntityDate, gift_certificate.modificationEntityDate, gift_certificate.createdEntityBy, \n" +
             "gift_certificate.modifiedEntityBy \n" +
             "from gift_certificate join certificates_and_tags cat on gift_certificate.id = cat.gift_certificate_id\n" +
@@ -98,7 +98,6 @@ public class SQLBuilder {
         }
 
         sql.append(LIMIT).append(size).append(OFFSET).append((page - 1) * size).append(SEMICOLON);
-
         return sql.toString();
     }
 

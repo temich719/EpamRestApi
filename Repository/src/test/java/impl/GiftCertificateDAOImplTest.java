@@ -87,6 +87,7 @@ public class GiftCertificateDAOImplTest {
         giftCertificate.setName("Certificate");
         giftCertificate.setTags(new HashSet<>(tags));
         giftCertificate.setCreateDate("12.01.22");
+        giftCertificate.setStatus(true);
         giftCertificateDAO.insert(giftCertificate);
         List<GiftCertificate> certificates = giftCertificateDAO.readAll(page, size);
         assertThat(certificates.get(certificates.size() - 1).getName()).isEqualTo(giftCertificate.getName());
@@ -97,7 +98,7 @@ public class GiftCertificateDAOImplTest {
     public void testDelete() throws RepositoryException {
         giftCertificateDAO.delete(id);
         List<GiftCertificate> giftCertificates = giftCertificateDAO.readAll(page, size);
-        assertThat(giftCertificates.get(0).getName()).isNotEqualTo("SportMaster");
+        assertThat(giftCertificates.get(0).getName()).isEqualTo("SportMaster");
     }
 
     @Transactional(rollbackFor = Exception.class)

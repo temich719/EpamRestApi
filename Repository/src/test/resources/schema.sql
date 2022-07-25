@@ -7,27 +7,28 @@ create schema giftCertificates;
 
 create table gift_certificate
 (
-    id               int auto_increment primary key,
-    name             varchar(50)  not null,
-    description      varchar(100) not null,
-    price            varchar(20)  not null,
-    duration         varchar(30)  not null,
-    create_date      varchar(100) not null,
-    last_update_date varchar(100) not null,
-    creationEntityDate DATETIME,
+    id                     int auto_increment primary key,
+    name                   varchar(50)  not null,
+    description            varchar(100) not null,
+    price                  varchar(20)  not null,
+    duration               varchar(30)  not null,
+    status                 boolean,
+    create_date            varchar(100) not null,
+    last_update_date       varchar(100) not null,
+    creationEntityDate     DATETIME,
     modificationEntityDate DATETIME,
-    createdEntityBy varchar(50),
-    modifiedEntityBy varchar(50)
+    createdEntityBy        varchar(50),
+    modifiedEntityBy       varchar(50)
 );
 
 create table tag
 (
-    id   int auto_increment primary key,
-    name varchar(50) not null unique,
-    creationEntityDate DATETIME,
+    id                     int auto_increment primary key,
+    name                   varchar(50) not null unique,
+    creationEntityDate     DATETIME,
     modificationEntityDate DATETIME,
-    createdEntityBy varchar(50),
-    modifiedEntityBy varchar(50)
+    createdEntityBy        varchar(50),
+    modifiedEntityBy       varchar(50)
 );
 
 create table certificates_and_tags

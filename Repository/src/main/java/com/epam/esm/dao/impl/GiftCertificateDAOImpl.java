@@ -92,6 +92,7 @@ public class GiftCertificateDAOImpl extends AbstractDAO implements GiftCertifica
         String dateAsISO = dateGenerator.getCurrentDateAsISO();
         giftCertificate.setCreateDate(dateAsISO);
         giftCertificate.setLastUpdateDate(dateAsISO);
+        giftCertificate.setStatus(true);
         session.save(giftCertificate);
     }
 

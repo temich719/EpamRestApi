@@ -50,7 +50,6 @@ public class Tag {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (audit != null ? audit.hashCode() : 0);
-        result = 31 * result + (giftCertificates != null ? giftCertificates.hashCode() : 0);
         return result;
     }
 
