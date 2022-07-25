@@ -1,9 +1,14 @@
 plugins {
     id 'java'
     id "io.freefair.lombok" version "6.4.1"
+    id 'jacoco'
 }
 
-java{
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
@@ -45,4 +50,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled(true)
+    }
 }
