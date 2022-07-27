@@ -2,18 +2,11 @@ plugins {
     id 'java'
     id "io.freefair.lombok" version "6.4.1"
     id 'jacoco'
-//    id 'org.sonarqube'
 }
 
 jacoco {
     toolVersion = "0.8.7"
 }
-
-//sonarqube{
-//    properties{
-//        property "sonar.sourceEncoding", "UTF-8"
-//    }
-//}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -56,23 +49,14 @@ dependencies {
 }
 
 test {
+    finalizedBy jacocoTestReport
     useJUnitPlatform()
-    //finalizedBy jacocoTestReport
+    testLogging.showStackTraces = true
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
-        xml.enabled true
+        xml.required = true
     }
 }
-
-plugins.withType(JacocoPlugin) {
-    tasks["test"].finalizedBy 'jacocoTestReport'
-}
-
-//jacocoTestReport {
-//    dependsOn test
-//    reports {
-//        xml.enabled(true)
-//    }
-//}
