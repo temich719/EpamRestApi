@@ -3,6 +3,7 @@ package com.epam.esm;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 @SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
-public class RestApi implements WebMvcConfigurer {
+public class RestApi extends SpringBootServletInitializer implements WebMvcConfigurer {
 
     private static final String LANG = "lang";
 
