@@ -1,6 +1,11 @@
-plugins{
+plugins {
     id 'org.sonarqube' version "3.3"
+    id 'war'
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
+
+war {
+    enabled = true
+}
