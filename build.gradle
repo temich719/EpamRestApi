@@ -9,3 +9,19 @@ version '1.0-SNAPSHOT'
 war {
     enabled = true
 }
+
+dependencies {
+
+    implementation(project(':Repository')) {
+        exclude module:'spring-boot-starter-tomcat'
+    }
+
+    implementation(project(':Service')) {
+        exclude module:'spring-boot-starter-tomcat'
+    }
+
+    implementation(project(':WevLayer')) {
+        exclude module:'spring-boot-starter-tomcat'
+    }
+
+}
