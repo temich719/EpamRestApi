@@ -10,6 +10,10 @@ war {
     enabled = true
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
 
     implementation(project(':Repository')) {
